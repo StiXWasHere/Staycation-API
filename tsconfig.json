@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",                       // Use ESNext for the latest features
+    "module": "ESNext",                       // Use ESNext for modules
+    "lib": ["DOM", "ESNext"],                 // Include DOM and ESNext libraries
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "baseUrl": "./",                          // Set base URL for module resolution
+    "paths": {
+      "@/*": ["src/*"]                        // Adjust paths if needed
+    }
+  },
+  "include": ["src/**/*", "next-env.d.ts"],                    // Include all TypeScript files in the src directory
+  "exclude": ["node_modules"]                 // Exclude node_modules
+}
