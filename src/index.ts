@@ -4,7 +4,14 @@ import admin from 'firebase-admin';
 import cors from 'cors'; // Import the CORS package
 import { Firestore } from '@google-cloud/firestore';
 import serviceAccount from './staycation-3db3b-firebase-adminsdk-z748u-f953ea3f31.json' assert { type: 'json' };
+import { createClerkClient } from '@clerk/backend'
+import dotenv from 'dotenv';
 
+dotenv.config();
+
+console.log('Clerk Secret Key:', process.env.CLERK_SECRET_KEY); // Add this after `dotenv.config()`
+
+const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY })
 
 // Initialize Express App
 const app = express();
@@ -54,7 +61,7 @@ app.get('/data/:id', async (req, res) => {
     console.error('Error fetching document:', error);
     res.status(500).json({ error: 'Error fetching document from database' });
   }
-});
+})
 
 // Example API Endpoint: Add Data to Firestore
 app.post('/data', async (req, res) => {
@@ -67,7 +74,20 @@ app.post('/data', async (req, res) => {
   }
 });
 
-// Start Express Server
 app.listen(port, () => {
   console.log(`API running on http://localhost:${port}`);
-});
+})
+
+app.get('/clerk/users', async (req, res) => {
+  try {
+    const response = await clerkClient.users.getUserList({
+      limit: 100
+    })
+    const userData = response.data.map(user => user.unsafeMetadata)
+    console.log(userData)
+    res.status(200).json(userData)
+  } catch (error) {
+    console.error('Error fetching Clerk users:', error)
+    res.status(500).json({ error: 'Error fetching users from Clerk' })
+  }
+})
